@@ -30,6 +30,28 @@
             </div>
             <div id="suggestProduct"></div>
         </div>
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+
+                        <th>Stock</th>
+
+                        <th>Price</th>
+                        <th>Quantity</th>
+
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <br>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
     </div>
     </div>
 
@@ -57,7 +79,50 @@
             });
         }
         if (searchData.length < 1) $('#suggestProduct').html(" ");
-    })
+    });
+
+    function testClick(product) {
+
+        var htmldata = `<tr>
+                <input type="hidden" name="product_id[]"  class="form-control product_id"  value="${product.id}">
+
+                <td >
+
+                <a href="javascript:void(0);">${product.name}</a>
+               </td>
+               <td>${product.qty}</td>
+
+               <td>
+                    <input type="text" name="price[]" class="price" value="${product.price}" style="width:100px;">
+                    </td>
+
+
+
+
+                <td>
+                <input type="text" name="quantity[]" class="form-control quantity"  placeholder="quantity" value="0" style="width:100px;" >
+                </td>
+
+
+                <td class="text-end" >
+                <input type="text" class="inline_total" readonly name="sub_total[]" value="${product.purchase_price}" style="width:100px;">
+                </td>
+                <td>
+                    <a class="remove">Delete</a>
+                </td>
+            </tr>`
+
+        $('table tbody').append(htmldata);
+
+        updateGrandTotal();
+
+    }
+
+    //delete row
+    $("table tbody").delegate(".remove", "click", function() {
+        $(this).parent().parent().remove();
+        updateGrandTotal();
+    });
     </script>
 
     <script>
