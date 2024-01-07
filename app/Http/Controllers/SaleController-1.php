@@ -12,10 +12,10 @@ class SaleController extends Controller
         $request->validate([
             'search' => 'required',
         ]);
-    
-        $products = Product::where("code", "LIKE", "%" . $request->search . "%")->get();
-    
-        return response()->json($products);
-    }
 
+        $products = Product::where("code", "LIKE", "%" . $request->search . "%")->take(10)->get();
+
+        return view('search-product', compact('products'));
+
+    }
 }

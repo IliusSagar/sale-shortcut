@@ -61,9 +61,30 @@
     </script>
 
     <script>
-    function autoClick(product) {
+    $("body").on("keyup", "#search", function() {
+        let searchData = $("#search").val();
+        let token = "{{ csrf_token() }}";
+        var route = "{{route('find.products.sales')}}";
+        if (searchData.length > 0) {
+            $.ajax({
+                type: 'GET',
+                url: route,
+                data: {
+                    search: searchData,
+                    // _token:token,
+                },
+                success: function(result) {
+                    $('#suggestProduct').html(result)
+                }
+            });
+        }
+        if (searchData.length < 1) $('#suggestProduct').html(" ");
+    });
+
+    function testClick(product) {
+
         var htmldata = `<tr>
-        <input type="hidden" name="product_id[]"  class="form-control product_id"  value="${product.id}">
+                <input type="hidden" name="product_id[]"  class="form-control product_id"  value="${product.id}">
 
                 <td >
 
@@ -89,42 +110,31 @@
                 <td>
                     <a class="remove">Delete</a>
                 </td>
-
-    </tr>`;
+            </tr>`
 
         $('table tbody').append(htmldata);
 
+        updateGrandTotal();
 
     }
 
-
-    function handleSearch() {
-        var searchTerm = $('#search').val();
-
-        $.ajax({
-            type: 'GET',
-            url: '/find-products-sales',
-            data: {
-                search: searchTerm
-            },
-            success: function(response) {
-                // Assuming response is an array of products
-                for (var i = 0; i < response.length; i++) {
-                    autoClick(response[i]);
-                }
-            },
-            error: function(error) {
-                console.error('Error fetching products: ', error);
-            }
-        });
-    }
-
-    $('#search').on('keyup', function() {
-        handleSearch();
+    //delete row
+    $("table tbody").delegate(".remove", "click", function() {
+        $(this).parent().parent().remove();
+        updateGrandTotal();
     });
     </script>
 
+    <script>
+    function showResult() {
+        $('#suggestProduct').slideDown(1000);
+    }
 
+    function hideResult() {
+        $('#suggestProduct').slideUp(1000);
+
+    }
+    </script>
 
 </body>
 
